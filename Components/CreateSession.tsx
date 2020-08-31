@@ -20,9 +20,8 @@ class CreateSession extends Component {
     }
 
     creationSuccess = () => { // called after session was succesfully created in the server
-        this.props.sessionCreated(name)
+        console.log("he")
     }
-
 
     sendPostRequest = (sessionName) => { // send the post request to the server
         this.setState({loading : true})
@@ -52,8 +51,8 @@ class CreateSession extends Component {
     }
     
 
-    createSession = () => { // called by create session button
-        const sessionName = this.refs.input.value;
+    createSession = function() : void { // called by create session button
+        let sessionName : string = this.refs.input.value;
         console.log(sessionName)
         if (sessionName.length <= 0) {
             this.setState({errorMessage : "Enter a name"})
@@ -64,14 +63,14 @@ class CreateSession extends Component {
         
     }
 
-
     render() { 
+        const loading = this.state.loading;
         return ( 
         <div className="PurpleBox">
             <p style={{color : "red"}}>{this.state.errorMessage}</p>
             <p>Session Name :</p>
-            <input disabled={this.state.loading} ref="input" type="text"/>
-            {this.state.loading ?
+            <input disabled={loading} ref="input" type="text"/>
+            {loading ?
                 <p>Loading...</p>
                 :
                 <div onClick={() => {this.createSession()}} className="PurpleBox-btn">Create Session</div>

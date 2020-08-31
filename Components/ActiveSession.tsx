@@ -1,8 +1,6 @@
 // Renders the videoplayer once session has been created
 
 import { Component } from 'react';
-import VideoQueue from './VideoQueue';
-import PlaceHolder from './Placeholder';
 
 class Session extends Component {
     constructor(props) {

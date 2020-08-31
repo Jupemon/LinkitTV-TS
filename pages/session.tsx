@@ -11,7 +11,7 @@ export default class extends Component { // Shows create session page if one has
     sessionCreated : false,
     sessionName : ""
   }
-  
+
   render() {
     return (
      
@@ -19,12 +19,9 @@ export default class extends Component { // Shows create session page if one has
       <TopNav /> 
       <div className="PurpleBox"><h1>Create new session</h1></div>
         {this.state.sessionCreated ? 
-        <div>
           <Session sessionName={this.state.sessionName}/>
-        </div>
         :
         <div>
-          <TopNav />
           <CreateSession sessionCreated={this.sessionCreated}/>
         </div>
         }

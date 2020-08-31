@@ -1,30 +1,7 @@
-// Allows user to create watching session
+// Allows user to create the watching session on the server
 
 import { Component } from 'react';
 
-function fetcher(url) { // used for fetching
-    return fetch(url).then(r => r.json());
-  }
-
-const buttonStyle = {
-    color : "white",
-}
-
-const divStyle ={
-    backgroundColor : "purple",
-    margin : "0 auto",
-    width : "50%",
-    padding : "80px",
-    textAlign : "center",
-    marginBottom : "50px",
-
-    borderRadius : "20px",
-    boxShadow : "rgba(0,0,0,0.8) 0 0 10px"
-}
-
-const h1Style = {
-    
-}
 
 
 class CreateSession extends Component {
@@ -37,62 +14,69 @@ class CreateSession extends Component {
          }
     }
 
-    fetcher = url => {
-        return fetch(url).then(r => r.json());
+
+    creationFailed = (error) => { // session creation unsuccessfull in the server
+        this.setState({errorMessage : error})
     }
 
-    createTheSession = () => {
-        const name = document.querySelector('input').value.toLowerCase()
-        fetch(`/api/test?name=${name}`).then(r => {
-            if (r.status === 200) {
-                console.log("everything went well")
+    creationSuccess = () => { // called after session was succesfully created in the server
+        this.props.sessionCreated(name)
+    }
+
+
+    sendPostRequest = (sessionName) => { // send the post request to the server
+        this.setState({loading : true})
+        fetch('/createsession', {
+            method:"POST",
+            headers : {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name : name,
+            })
+        }).then(d => {
+
+            this.setState({loading : false})
+
+            if (d.status === 201) {
+                
             }
-            else if (r.status === 404) {
-                console.log("not found")
+
+            if (d.status === 409) {
+                this.creationFailed("Session name is already taken")
             }
             else {
-                console.log(r.status)
-                console.log("something horrible went wrong")
+                this.creationFailed("Something went wrong")
             }
         })
-        //const {data, error} = this.fetcher(`/api/test?${"name"}`)
-
     }
+    
 
-    sendRequest = () => {
-        const name = document.querySelector('input').value.toLowerCase()
-        if (name.length > 0) {
-
-            fetch('/createsession', {
-                method:"POST",
-                headers : {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name : name,
-                })
-            }).then(d => {
-                if (d.status === 200) {
-                    d.json()
-                    this.props.sessionCreated(name)
-                }
-                else {
-                    this.setState({errorMessage : "Session name is already taken"})
-                }
-            })
+    createSession = () => { // called by create session button
+        const sessionName = this.refs.input.value;
+        console.log(sessionName)
+        if (sessionName.length <= 0) {
+            this.setState({errorMessage : "Enter a name"})
         }
         else {
-            this.setState({errorMessage : "Please enter a session name"})
+            this.sendPostRequest(sessionName) // Sends fetch request creating a new session
         }
-
+        
     }
-    render() { 
 
+
+    render() { 
         return ( 
         <div className="PurpleBox">
+            <p style={{color : "red"}}>{this.state.errorMessage}</p>
             <p>Session Name :</p>
-            <input type="text"/>
-            <div className="PurpleBox-btn">Create Session</div>
+            <input disabled={this.state.loading} ref="input" type="text"/>
+            {this.state.loading ?
+                <p>Loading...</p>
+                :
+                <div onClick={() => {this.createSession()}} className="PurpleBox-btn">Create Session</div>
+            }
+            
             <div>
                 
             </div>

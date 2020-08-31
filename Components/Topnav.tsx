@@ -6,7 +6,7 @@ class TopNav extends Component { // Renders the top navigation bar
     render() { 
         return ( 
         <div className="Topnav" >
-            <h1 style={{marginTop:"0px"}}>Linkit TV</h1>
+            <h1>Linkit TV</h1>
         </div> );
     }
 }

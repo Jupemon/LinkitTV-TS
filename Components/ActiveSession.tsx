@@ -1,25 +1,36 @@
-// Renders the videoplayer once session has been created
+import * as React from 'react';
+import YouTubeplayer from './YoutubePlayer';
+import VideoQueue from './VideoQueue';
 
-import { Component } from 'react';
+interface Props {
+    sessionName : string
+}
+ 
+interface State {
+    playingVideo : number, // index of the current video played
+}
 
-class Session extends Component {
-    constructor(props) {
-    super(props)
-    this.state = { 
-        videoList : []
-     }
+class ActiveSession extends React.Component<Props, State> {
+
+    constructor(props : Props) {
+        super(props);
+        this.state = {
+            playingVideo : 0,
+        };
     }
-    addVideo = (videoName) => {
-        const videoList = this.state
-        videoList.push(videoName)
-        this.setState({videoList : videoList})
+
+
+    
+    selectVideo = (name:string) => {
+        name
     }
 
-    render() { 
-        return ( 
+    public render() { 
+        return (
         <div>
+        <YouTubeplayer id={"B1lNhNHdoPI"}/>
         </div> );
     }
 }
  
-export default Session;
+export default ActiveSession;

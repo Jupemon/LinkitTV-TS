@@ -2,19 +2,6 @@ import React, { Component } from 'react'
 import TopNav from '../Components/TopNav';
 
 
-const divStyle ={
-  backgroundColor : "purple",
-  margin : "0 auto",
-  width : "50%",
-  padding : "80px",
-  textAlign : "center",
-  marginBottom : "50px",
-
-  borderRadius : "20px",
-  boxShadow : "rgba(0,0,0,0.8) 0 0 10px"
-}
-
-
 
 export default class extends Component {
   static getInitialProps({ query: { id } }) {

@@ -1,18 +1,23 @@
 // Allows user to create the watching session on the server
 
 import { Component } from 'react';
+import { timingSafeEqual } from 'crypto';
+import { error } from 'console';
+
+ 
+interface State {
+    errorMessage : string,
+    loading : boolean
+}
 
 
+class CreateSession extends Component<State> {
 
-class CreateSession extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = { 
+        state = { 
             errorMessage : "",
             loading : false
          }
-    }
+
 
 
     creationFailed = (error) => { // session creation unsuccessfull in the server
@@ -20,12 +25,12 @@ class CreateSession extends Component {
     }
 
     creationSuccess = () => { // called after session was succesfully created in the server
-        console.log("he")
+
     }
 
-    sendPostRequest = (sessionName) => { // send the post request to the server
+    sendPostRequest = async (sessionName: string)  => { // send the post request to the server
         this.setState({loading : true})
-        fetch('/createsession', {
+        return fetch('/createsession', {
             method:"POST",
             headers : {
               'Content-Type': 'application/json'
@@ -34,31 +39,34 @@ class CreateSession extends Component {
                 name : name,
             })
         }).then(d => {
-
             this.setState({loading : false})
 
-            if (d.status === 201) {
-                
+            if (d.status === 200) {
+                //this.props.sessionCreated(sessionName)
+                return true
             }
 
-            if (d.status === 409) {
-                this.creationFailed("Session name is already taken")
+            else if (d.status === 409) {
+                //this.creationFailed("Session name is already taken")
+                return false
             }
             else {
-                this.creationFailed("Something went wrong")
+                //this.creationFailed("Something went wrong")
+                throw console.error("not work no")
             }
         })
     }
     
 
-    createSession = function() : void { // called by create session button
+    createSession =  async function() { // called by create session button
         let sessionName : string = this.refs.input.value;
         console.log(sessionName)
         if (sessionName.length <= 0) {
             this.setState({errorMessage : "Enter a name"})
         }
         else {
-            this.sendPostRequest(sessionName) // Sends fetch request creating a new session
+            await this.sendPostRequest(sessionName)
+            console.log("i should work yet")
         }
         
     }
@@ -66,20 +74,25 @@ class CreateSession extends Component {
     render() { 
         const loading = this.state.loading;
         return ( 
-        <div className="PurpleBox">
-            <p style={{color : "red"}}>{this.state.errorMessage}</p>
-            <p>Session Name :</p>
-            <input disabled={loading} ref="input" type="text"/>
-            {loading ?
-                <p>Loading...</p>
-                :
-                <div onClick={() => {this.createSession()}} className="PurpleBox-btn">Create Session</div>
-            }
-            
-            <div>
-                
+        <div>
+
+            <div className="PurpleBox">
+                <h1>Create new session</h1>
             </div>
-        </div> );
+
+            <div className="PurpleBox">
+                <p style={{color : "red"}}>{this.state.errorMessage}</p>
+                <p>Session Name :</p>
+                <input disabled={loading} ref="input" type="text"/>
+                {loading ?
+                    <p>Loading...</p>
+                    :
+                    <p onClick={() => {this.createSession()}} className="PurpleBox-btn">Create Session</p>
+                }
+                
+            </div> 
+        </div>
+        );
     }
 }
  

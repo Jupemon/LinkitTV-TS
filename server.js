@@ -23,7 +23,7 @@ let activeSessions= [];
 io.on('connection', socket => { // called when frontend client connects
 
     let index = 0;
-    
+    console.log(activeSessions, "LIST OF ALL ACTIVE SESSIONS")
     activeSessions[index].socketId = socket.id; // 
     index++;
   
@@ -58,7 +58,7 @@ app.post('/createsession', jsonParser, (req, res) => {
   else { // session name already taken
     res.status(409).json("name already exists")
   }
-  
+
 })
 
 
@@ -67,7 +67,7 @@ app.post('/createsession', jsonParser, (req, res) => {
 app.post('/suggestvideo', jsonParser, (req, res) => { 
 
     const {videoUrl, videoName, postId} = req.body
-
+  
     const session = activeSessions.find(s => { // find the specific session from the active sessions list
         return s.name === postId
     })
@@ -84,16 +84,16 @@ app.post('/suggestvideo', jsonParser, (req, res) => {
 
 })
 
-app.get('/share/:id', (req, res) => { // Serve the linke sharing page
-
-    let session = activeSessions.find(o => o.name === req.params.id);
-
-    if (session === undefined){ // If session doesnt exist responds with a 404
-      return nextApp.render(req, res, '/notFound', { id: req.params.id })
+app.get('/share/:id', (req, res) => { // Serve the URL link sharing page
+    const { id } = req.params;
+    let session = activeSessions.find(o => o.name === id);
+    console.log(session, "MEMEMEM")
+    if (session === undefined || id === null){ // If session doesnt exist serve the notfound page
+      return nextApp.render(req, res, '/notfound', { id: id })
     }
-
+    
     else {
-      return nextApp.render(req, res, '/share', { id: req.params.id })
+      return nextApp.render(req, res, '/share', { id: id }) // serve the share page with ID initial props
     }
 
 })

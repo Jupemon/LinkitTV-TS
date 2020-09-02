@@ -2,7 +2,7 @@ import Link from 'next/link'
 import ActiveSession from '../Components/ActiveSession'
 import { Component } from 'react';
 import CreateSession from '../Components/CreateSession'
-import TopNav from '../Components/TopNav'
+import TopNav from '../Components/Topnav'
 
 
 

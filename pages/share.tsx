@@ -1,56 +1,39 @@
-import React, { Component } from 'react'
-import TopNav from '../Components/TopNav';
+import { useRouter } from 'next/router'
+import React, { Component, Props } from 'react'
+import TopNav from '../Components/Topnav'
 
 
 
-export default class extends Component {
-  static getInitialProps({ query: { id } }) {
+interface State {
+  suggestionSent : boolean,
+  loading : boolean,
+  videoUrl : string,
+  videoName : string
+}
+
+
+
+export default class extends Component<State>{
+  
+  // get props passed by custom nextJS server
+  static async getInitialProps ({ query: { id } }) {
     return { postId: id }
   }
-  constructor(props) {
-    super(props);
-    this.state = {
-      suggestionSent : false,
-      loading : false,
-      videoUrl : "",
-      videoName : ""
-    }
+
+  state = {
+    infoMessage : "",
+    loading : false,
+    videoUrl : "",
+    videoName : ""
   }
 
-setVideoName = (name) => { // called on input change
-  this.setState({suggestionSent : false})
-  if (name.length > 0 && name.length < 18) {
-    this.setState({videoName : name})
-  }
-  else {
-    this.setState({videoName : ""})
-  }
-}
 
-setUrl = (url) => { // called on input change
-  this.setState({suggestionSent : false})
-  const validation = this.getYoutubeVideoId(url)
-  
-  console.log(validation)
-  if(validation) {
-    this.setState({videoUrl : validation})
+  clearInput = () =>  { // clears user input after successfully sent data
+    this.setState({videoName : "", videoUrl : "", loading : false, infoMessage : "Video Sent"})
   }
-  else {
-    this.setState({videoUrl : ""})
-  }
-}
 
-getYoutubeVideoId = (ytlink) => { //checks if video is valid, returns the video id
-  var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  var match = ytlink.match(regExp);
-  if (match && match[2].length == 11) {
-    return match[2];
-  } else {
-    return false
-  }
-}
 
-  sendSuggestion = (videoUrl, videoName) => { // sends the video suggestion to server
+  sendRequest = ( requestData : object ): void => { // sends the user input to server
     this.setState({ loading : true })
     fetch(`/suggestvideo`,
     {
@@ -58,41 +41,77 @@ getYoutubeVideoId = (ytlink) => { //checks if video is valid, returns the video 
       headers : {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        videoName : this.state.videoName,
-        videoUrl : this.state.videoUrl,
-        postId : this.props.postId
-      })
+      body: JSON.stringify(requestData)
     }
     ).then(d => d.json()).then(d => {
-      console.log("data gotten here it is :", d)
-      this.setState({loading : false, suggestionSent : true})
-  })
-  console.log(this.state)
+      console.log("this was received :", d)
+      this.setState({suggestionSent : true})
+    })
   }
 
-  validateForm = () => { // called when button is pressed, makes sure everything is valid before sending data
-    if (this.state.videoName && this.state.videoUrl && !this.state.suggestionSent) {
-      document.querySelectorAll("input")[0].value = "";
-      document.querySelectorAll("input")[1].value = ""
-      this.sendSuggestion();
+  validateYoutubeUrl = (Url : string): boolean => { // validate Youtube URL link
+
+    var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    let match: any = Url.match(regExp);
+
+    if (match && match[2].length == 11) {
+      return match[2];
+
+    } 
+
+    else {
+      return false
+    }
+
+  }
+
+  validateInput = (videoUrl : string, videoName : string): boolean => { // Validate input data
+
+    if (videoUrl.length > 0 && videoName.length > 0 && this.validateYoutubeUrl(videoUrl)) {
+      return true
+    }
+
+    else {
+      return false
+    }
+
+  }
+
+  handleClick = () => { // Called after user clicks share video button
+    const { videoUrl, videoName } = this.state
+    const { postId } = this.props
+    if (this.validateInput(videoUrl, videoName)) {
+
+      const requestData : object = { // data sent to server 
+        videoName,
+        videoUrl,
+        postId
+      }
+      this.sendRequest(requestData)
+    }
+    else {
+      this.clearInput()
     }
   }
 
   render() {
-    const videoName = this.state.videoname
     return (
       <div>
         <TopNav />
-        <div className="PurpleBox"><h1>Share videos with {"john"}</h1></div>
+
+        <div className="PurpleBox">
+          <h1>Share videos with {this.props.postId}</h1>
+        </div>
 
         <div className="PurpleBox">
           <div>
-            Video name : <input type="text"/>
+            Video name : <input value={this.state.videoName} onChange={(e) => {this.setState({videoName : e.target.value})}} placeholder="name here" type="text"/>
           </div>
           <div>
-            Video URL : <input type="text"/>
+            Youtube Video URL : <input value={this.state.videoUrl} onChange={(e) => {this.setState({videoUrl : e.target.value})}} placeholder="www.youtube.com/watch?v=l6TgVsgTW7I" type="text"/>
           </div>
+          <p>{this.state.infoMessage}</p>
+          <p onClick={() => this.handleClick()} className="PurpleBox-btn">Share Video</p>
         </div>
       </div>
     )

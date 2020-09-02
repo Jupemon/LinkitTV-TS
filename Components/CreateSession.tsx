@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 
 interface Props {
-    sessionCreated : boolean /////////////////////3535
+    sessionCreated : (sessionName : string) => null
 }
 
 interface State {
@@ -28,11 +28,7 @@ class CreateSession extends Component<Props, State> {
         this.setState({errorMessage : error})
     }
 
-    creationSuccess = () => { // called after session was succesfully created in the server
-
-    }
-
-    sendPostRequest = async (sessionName: string)  => { // send the post request to the server
+    sendPostRequest = async (sessionName: string)  => { // Create session on the server
         this.setState({loading : true})
         return fetch('/createsession', {
             method:"POST",
@@ -70,7 +66,7 @@ class CreateSession extends Component<Props, State> {
         }
         else {
             this.sendPostRequest(sessionName)
-            .then(d => this.props.sessionCreated)
+            .then(d => this.props.sessionCreated(d)) // Session successfully created
             .catch((e) => this.showError(e))
         }
         
@@ -78,6 +74,7 @@ class CreateSession extends Component<Props, State> {
 
     render() { 
         const loading: boolean = this.state.loading;
+        
         return ( 
         <div>
 

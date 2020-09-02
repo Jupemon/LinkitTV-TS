@@ -126,7 +126,6 @@ class YouTubeplayer extends React.Component<Props, State> {
   }
 
   selectVideo = v => { // called when clicking a video on video queue
-    console.log("RELOADING, COVER ME")
     const videoIndex = this.state.videoList.indexOf(v)
     const playlist = this.state.videoList.map(i => {
       return i.videoUrl

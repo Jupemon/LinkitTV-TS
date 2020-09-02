@@ -26,7 +26,7 @@ class VideoQueue extends Component<Props> {
     render() { 
         const videoIndex = this.props.videoIndex;
         return ( 
-        <div>
+        <div className="VideoQueue">
             <ul style={{paddingLeft : "5px"}}>
                 <p>Video Queue</p>
                 {this.props.videoList.map(v => {

@@ -29,7 +29,8 @@ class ActiveSession extends React.Component<Props, State> {
         return (
         <div>
         <YouTubeplayer id={"B1lNhNHdoPI"}/>
-        </div> );
+        </div> 
+        );
     }
 }
  

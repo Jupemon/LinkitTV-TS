@@ -41,22 +41,24 @@ io.on('connection', socket => { // called when frontend client connects
 
 app.post('/createsession', jsonParser, (req, res) => { 
   const { name } = req.body;
-  let session = activeSessions.find(o => o.name.toLowerCase() === name.toLowerCase()); // searches for active session with that name
 
+  let session = activeSessions.find(o => o.name.toLowerCase() === name.toLowerCase()); // searches for an active session with that name
+ 
   if (session === undefined || session === null) { // creates a new session
-    console.log("session created")
     //createSocket(req.params.name);
     activeSessions.push({
       name : name.toLowerCase(),
       suggestedvideos : []
     })
-    res.status(201).json(`${req.params.name} created`)
+    console.log(activeSessions, "list of active sessions")
+    res.status(201).json(`${name} created`)
   }
-
+  
 
   else { // session name already taken
-    res.status(400).json("name is taken, it already exists")
+    res.status(409).json("name already exists")
   }
+  
 })
 
 

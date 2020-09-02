@@ -143,7 +143,7 @@ class YouTubeplayer extends React.Component<Props, State> {
     const { id } = this.props;
     return (<div>
         <div id={`youtube-player-${id}`} />
-        <VideoQueue videoIndex={this.state.videoIndex} selectVideo={this.selectVideo} videoList={this.state.videoList} updateVideoList={this.updateVideoList} sessionName={"hoh"}/>
+        <VideoQueue videoIndex={this.state.videoIndex} selectVideo={this.selectVideo} videoList={this.state.videoList} updateVideoList={this.updateVideoList} sessionName={this.state.sessionName}/>
         </div>);
   };
 }

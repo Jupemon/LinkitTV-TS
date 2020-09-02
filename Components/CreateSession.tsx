@@ -1,26 +1,30 @@
-// Allows user to create the watching session on the server
-
 import { Component } from 'react';
-import { timingSafeEqual } from 'crypto';
-import { error } from 'console';
 
- 
+
+interface Props {
+    sessionCreated : boolean /////////////////////3535
+}
+
 interface State {
     errorMessage : string,
-    loading : boolean
+    loading : boolean,
+
 }
 
 
-class CreateSession extends Component<State> {
+class CreateSession extends Component<Props, State> {
 
-        state = { 
+    constructor(props) {
+        super(props)
+        this.state = { 
             errorMessage : "",
             loading : false
-         }
+        }
+    
+     }
 
 
-
-    creationFailed = (error) => { // session creation unsuccessfull in the server
+    showError = (error : string) => { // Show error message
         this.setState({errorMessage : error})
     }
 
@@ -36,43 +40,44 @@ class CreateSession extends Component<State> {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name : name,
+                name : sessionName,
             })
         }).then(d => {
             this.setState({loading : false})
 
-            if (d.status === 200) {
-                //this.props.sessionCreated(sessionName)
-                return true
+            if (d.status === 201) {
+                return sessionName
             }
 
             else if (d.status === 409) {
-                //this.creationFailed("Session name is already taken")
-                return false
+                throw "Name already exists"
+
             }
+            
             else {
-                //this.creationFailed("Something went wrong")
-                throw console.error("not work no")
+                throw "Something went wrong"
             }
+
         })
     }
     
 
-    createSession =  async function() { // called by create session button
+    createSession =  function() { // called by create session button
         let sessionName : string = this.refs.input.value;
         console.log(sessionName)
         if (sessionName.length <= 0) {
             this.setState({errorMessage : "Enter a name"})
         }
         else {
-            await this.sendPostRequest(sessionName)
-            console.log("i should work yet")
+            this.sendPostRequest(sessionName)
+            .then(d => this.props.sessionCreated)
+            .catch((e) => this.showError(e))
         }
         
     }
 
     render() { 
-        const loading = this.state.loading;
+        const loading: boolean = this.state.loading;
         return ( 
         <div>
 

@@ -10,7 +10,6 @@ interface Props {
  
 interface State {
     showPlaceHolder : boolean, // currently playing video from the list
-    sessionName? : string,
     firstVideoPlayed : boolean,
     videoIndex : number,
     videoList : object[]
@@ -19,6 +18,7 @@ interface State {
 
 
 class YouTubeplayer extends React.Component<Props, State> {
+
     constructor(props : Props) {
         super(props)
         this.state={
@@ -78,12 +78,11 @@ class YouTubeplayer extends React.Component<Props, State> {
 
   };
 
-  onPlayerStateChange = event => {
+  onPlayerStateChange = event => { // Called every time user interacts with the player / after certain events happen with the player
+  
+    if (event.data == -1 ) { // PLAYER ENDED
+      let videoIndex: number = this.state.videoIndex;
 
-    // Variables
-
-    if (event.data == -1 ) { // update playlist if they dont match
-      let videoIndex = this.state.videoIndex;
       var index = event.target.getPlaylistIndex();
       const playlist = this.state.videoList.map(v => {
         return v.videoUrl
@@ -106,7 +105,7 @@ class YouTubeplayer extends React.Component<Props, State> {
     }  
   }
 
-  updateVideoList = (vid) => {
+  updateVideoList = (vid) => { // updates the video list
     let videoList = this.state.videoList
     console.log(vid, "VID TO BE ADDED")
     console.log(this.state.videoList, "VIDEOLIST")
@@ -143,7 +142,7 @@ class YouTubeplayer extends React.Component<Props, State> {
     return (<div>
         <div id={`youtube-player-${id}`} />
         <VideoQueue videoIndex={this.state.videoIndex} selectVideo={this.selectVideo} videoList={this.state.videoList} updateVideoList={this.updateVideoList} sessionName={this.state.sessionName}/>
-        </div>);
+        </div>); 
   };
 }
 

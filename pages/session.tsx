@@ -14,13 +14,14 @@ class Session extends Component { // Shows create session page if one has not be
 
   sessionCreated = (name) => {
     this.setState({sessionCreated : true, sessionName : name})
+    sessionStorage.setItem('sessionName', name)
   }
 
   render() {
     return (<div>
 
       <TopNav /> 
-      {this.state.sessionCreated ? <ActiveSession/> : <CreateSession sessionCreated={this.sessionCreated}/>}
+      {this.state.sessionCreated ? <ActiveSession sessionName={this.state.sessionName}/> : <CreateSession sessionCreated={this.sessionCreated}/>}
         
     </div>)
   }

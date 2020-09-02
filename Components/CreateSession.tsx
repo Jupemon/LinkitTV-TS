@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 
 interface Props {
-    sessionCreated : (sessionName : string) => null
+    sessionCreated : (sessionName : string) => void
 }
 
 interface State {

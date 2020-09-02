@@ -21,7 +21,7 @@ let activeSessions= [];
 // Handle socket io connections
 
 io.on('connection', socket => { // called when frontend client connects
-
+    console.log("connected baby")
     let index = 0;
     console.log(activeSessions, "LIST OF ALL ACTIVE SESSIONS")
     activeSessions[index].socketId = socket.id; // 
@@ -37,9 +37,7 @@ io.on('connection', socket => { // called when frontend client connects
   })
 
 
-// Called when a new client with an embedded player is activated
-
-app.post('/createsession', jsonParser, (req, res) => { 
+app.post('/createsession', jsonParser, (req, res) => {
   const { name } = req.body;
 
   let session = activeSessions.find(o => o.name.toLowerCase() === name.toLowerCase()); // searches for an active session with that name
@@ -78,6 +76,7 @@ app.post('/suggestvideo', jsonParser, (req, res) => {
 
     else { // emit the video to the specific client
         io.emit(`${postId} video`, {videoName : videoName, videoUrl : videoUrl});
+        console.log("emitting data");
         res.status(200).json("data received and handled")
     }
 

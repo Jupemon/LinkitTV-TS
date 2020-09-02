@@ -28,7 +28,7 @@ export default class extends Component<State>{
   }
 
 
-  clearInput = () =>  { // clears user input after successfully sent data
+  clearInput = () =>  { // clears user input
     this.setState({videoName : "", videoUrl : "", loading : false, infoMessage : "Video Sent"})
   }
 
@@ -105,10 +105,10 @@ export default class extends Component<State>{
 
         <div className="PurpleBox">
           <div>
-            Video name : <input value={this.state.videoName} onChange={(e) => {this.setState({videoName : e.target.value})}} placeholder="name here" type="text"/>
+            Video name : <input value={this.state.videoName} onChange={(e) => {this.setState({videoName : e.target.value})}} placeholder="name" type="text"/>
           </div>
           <div>
-            Youtube Video URL : <input value={this.state.videoUrl} onChange={(e) => {this.setState({videoUrl : e.target.value})}} placeholder="www.youtube.com/watch?v=l6TgVsgTW7I" type="text"/>
+            Video URL : <input value={this.state.videoUrl} onChange={(e) => {this.setState({videoUrl : e.target.value})}} placeholder="watch?v=8zH2JP4LgaE" type="text"/>
           </div>
           <p>{this.state.infoMessage}</p>
           <p onClick={() => this.handleClick()} className="PurpleBox-btn">Share Video</p>

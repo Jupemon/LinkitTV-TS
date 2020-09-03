@@ -2,23 +2,36 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import VideoQueue from './VideoQueue';
 
-
+interface Playlist { // List of all the videos which can be clicked & played
+  videoUrl : string
+  videoName : string
+}
 
 interface State {
 
   playlistIndex : number // Index of the playing playlist video
-  playList : object[]  // Current youtube playlist
+  playlist : Array<Playlist>  // Current youtube playlist
 
 }
 
+interface Props { 
+  sessionName : string // used to receive socketIO messages
+}
 
 
-class YouTubeplayer extends React.Component<State> {
+class YouTubeplayer extends React.Component<Props, State> {
 
-  state={
-            playlistIndex : 0,
-            playlist : []
-        }
+  constructor(props : Props) {
+    super(props)
+
+    this.state = {
+      playlistIndex : 0,
+      playlist : []
+    }
+  
+  }
+
+
 
 
   componentDidMount = () => {
@@ -31,14 +44,22 @@ class YouTubeplayer extends React.Component<State> {
     this.player.loadPlaylist(playlist, index);
   }
 
-  updatePlaylist = (videoList: object[], playlistIndex: number): void => { // called by videoqueue when selecting a video, updates the youtube playlist
+  updatePlaylist = (videoList, playlistIndex: number): void => { // called by videoqueue when selecting a video, updates the youtube playlist
     const playlist : string[] = videoList.map(i => i.videoUrl)
     this.setState({ playlist, playlistIndex })
-    this.loadPlaylist(playlist, playlistIndex + 1)
+    this.loadPlaylist(playlist, playlistIndex)
   }
 
 
   loadYoutubePlayer = () => { // loads the required scripts for youtube player
+    var tag = document.createElement('script');
+    tag.id = 'iframe-demo';
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+
+    /*
     const tag = document.createElement('script');
     console.log("loading player")
     tag.src = 'https://www.youtube.com/iframe_api';
@@ -46,11 +67,10 @@ class YouTubeplayer extends React.Component<State> {
     
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    window.onYouTubeIframeAPIReady = this.loadVideo;
+    window.onYouTubeIframeAPIReady = this.loadVideo;*/
   }
 
   loadVideo = () => { // loads the video once player is ready
-
     this.player = new window.YT.Player("youtube-player", {
       videoId: "B1lNhNHdoPI",
       events: {
@@ -111,8 +131,12 @@ class YouTubeplayer extends React.Component<State> {
   render = () => {
 
     return (<div>
-        <div id={"youtube-player"}/>
-        <VideoQueue updatePlaylist={this.updatePlaylist}/>
+        {/*<div id={"youtube-player"}/>*/}
+        <iframe id="existing-iframe-example"
+        width="640" height="360"
+        src="https://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1"
+        ></iframe>
+        <VideoQueue sessionName={this.props.sessionName} updatePlaylist={this.updatePlaylist}/>
         </div>); 
   };
 }

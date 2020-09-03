@@ -3,19 +3,24 @@ import io from 'socket.io-client'
 import { runInThisContext } from 'vm'
 
 interface Props {
-    updatePlaylist : (playlist : object[], playlistIndex : number) => void
+    updatePlaylist : (playlist : object[], playlistIndex : number) => void // update youtube playlist
+    sessionName : string
 }
 
-interface Videolist { // List of all the videos
+interface Videolist { // List of all the videos which can be clicked & played
     videoUrl : string
     videoName : string
 }
 
+interface Message { // messages received via socketIO
+    videoUrl : string
+    videoName : string
+}
 
 interface State {
-    videoList : Array<Videolist> // list of all videos
+    videoList : Array<Videolist>
     videoIndex : number // index of the currently playing video
-    socket : any
+    socket : any    // socket IO Config
 }
 
 class VideoQueue extends Component<Props, State> {
@@ -34,50 +39,43 @@ class VideoQueue extends Component<Props, State> {
         }
     }
     
-    
+    updateVideoIndex = (videoIndex : number) => { 
+        
+    }
 
-    updateVideoList = (msg : object): void => { // Called every time a socketIO message is received, updates the videolist
+    updateVideoList = ( msg ): void => { // Updates the videolist
 
-        let videoList : object[] = this.state.videoList
+        let videoList = this.state.videoList
         videoList.push(msg)
         this.setState({ videoList })
        
     }
 
-    handleClick = (videoList : object[], clickedVideo : any): void => {
-        console.log(clickedVideo.videoName)
-        console.log(videoList[0].videoName)
-        console.log(videoList.findIndex(v => {v.videoName === clickedVideo.videoName}))
-        /*
-        const array1 = [{ videoUrl : "p7-QZ2O-Bz0", videoName: "1"},  { videoUrl : "p7-QZ2O-Bz0", videoName: "2"},  { videoUrl : "p7-QZ2O-Bz0", videoName: "3"}];
+    handleClick = (videoList : object[], videoIndex : number): void => { // Called when list element is clicked, update videoindex & youtubeplaylist
+        this.setState({ videoIndex }, () => {this.props.updatePlaylist(videoList, videoIndex)})
         
-       
-        console.log(array1.findIndex(n => n.videoName === "1"));
-        console.log(videoList.findIndex(n => n.videoName === "ok"))
-        console.log(videoList, "VIDEO LIST HERE")
-        console.log(videoList.findIndex(v => {v.videoName == "ok"}), "i shoudl be")
-        //console.log(videoList.findIndex(n => n==="1"
-        //this.props.updatePlaylist( videoList, videoIndex, )
-        */
     }
 
 
     componentDidMount() { 
-
-        this.state.socket.on(`${sessionStorage.getItem("sessionName")} video`, (msg) => { // called every time socket io receives a message
+        console.log("above banzai")
+        console.log(sessionStorage.getItem("sessionName"), "BANZAi")
+        console.log("below banzai")
+        console.log(this.props.sessionName, "Finally here i see")
+        this.state.socket.on(`${sessionStorage.getItem("sessionName")} video`, (msg : Message) => { // called every time socket io receives a message
             console.log("data received")
             this.updateVideoList(msg)
-        } )
+        })
     }
     render() { 
         const {videoIndex, videoList} = this.state
 
         return ( 
         <div className="VideoQueue">
-            <ul style={{paddingLeft : "5px"}}>
+            <ul>
                 <p>Video Queue</p>
                 {videoList.map(v => {
-                    return <li onClick={() => {this.handleClick(videoList, v)}}>{v.videoName}</li>
+                    return <li onClick={() => {this.handleClick(videoList, videoList.findIndex(e => e.videoName === v.videoName))}}>{v.videoName}</li>
                 })}
             </ul>
         </div> );

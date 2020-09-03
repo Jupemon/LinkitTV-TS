@@ -6,15 +6,15 @@ import TopNav from '../Components/Topnav'
 
 
 
+
 class Session extends Component { // Shows create session page if one has not been created
   state={
     sessionCreated : false,
     sessionName : ""
   }
 
-  sessionCreated = (name) => {
+  sessionCreated = (name) => { // Called once session has been created, Renders activeSession 
     this.setState({sessionCreated : true, sessionName : name})
-    sessionStorage.setItem('sessionName', name)
   }
 
   render() {

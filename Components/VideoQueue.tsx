@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 import { runInThisContext } from 'vm'
 
 interface Props {
-    updatePlaylist : (playlist : object[], playlistIndex : number) => void // update youtube playlist
+    updatePlaylist : (playlist : Array<Videolist>, playlistIndex : number) => void // update youtube playlist
     sessionName : string
 }
 
@@ -30,12 +30,7 @@ class VideoQueue extends Component<Props, State> {
         this.state = {
             socket : io(),
             videoIndex : 0,
-            videoList : 
-                    [
-                        { videoUrl : "p7-QZ2O-Bz0", videoName: "ok"},
-                        { videoUrl : "p7-QZ2O-Bz0", videoName: "johnosn video 2"},
-                        { videoUrl : "p7-QZ2O-Bz0", videoName: "johnosn video 3"}
-                    ]
+            videoList : []
         }
     }
     
@@ -51,18 +46,14 @@ class VideoQueue extends Component<Props, State> {
        
     }
 
-    handleClick = (videoList : object[], videoIndex : number): void => { // Called when list element is clicked, update videoindex & youtubeplaylist
+    handleClick = (videoList : Array<Videolist>, videoIndex : number): void => { // Called when list element is clicked, update videoindex & youtubeplaylist
         this.setState({ videoIndex }, () => {this.props.updatePlaylist(videoList, videoIndex)})
         
     }
 
 
     componentDidMount() { 
-        console.log("above banzai")
-        console.log(sessionStorage.getItem("sessionName"), "BANZAi")
-        console.log("below banzai")
-        console.log(this.props.sessionName, "Finally here i see")
-        this.state.socket.on(`${sessionStorage.getItem("sessionName")} video`, (msg : Message) => { // called every time socket io receives a message
+        this.state.socket.on(`${this.props.sessionName} video`, (msg : Message) => { // called every time socket io receives a message 
             console.log("data received")
             this.updateVideoList(msg)
         })

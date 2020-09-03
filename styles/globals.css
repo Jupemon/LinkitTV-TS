@@ -26,7 +26,6 @@ a {
   left: 0%;
   background-color: purple;
   border-bottom : 2px solid black;
-  z-index: 100;
 }
 
 .Topnav h1 {
@@ -93,4 +92,17 @@ a {
 
 .VideoQueue li:hover {
   background-color: grey;
+}
+
+
+
+.SessionInfo {
+  top: 10px;
+  position: absolute;
+  right: 15px;
+  color: white;
+}
+
+.SessionInfo a {
+  color: gold;
 }

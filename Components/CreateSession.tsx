@@ -10,6 +10,7 @@ interface Props {
 interface State {
     errorMessage : string,
     loading : boolean,
+    sessionName : string // User input
 
 }
 
@@ -19,6 +20,7 @@ class CreateSession extends Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = { 
+            sessionName : "",
             errorMessage : "",
             loading : false
         }
@@ -60,9 +62,10 @@ class CreateSession extends Component<Props, State> {
     }
     
 
-    createSession =  function() { // called by create session button
-        let sessionName : string = this.refs.input.value;
-        console.log(sessionName)
+    createSession =  (): void =>  { // called by create session button
+        
+        let sessionName : string = this.state.sessionName;
+
         if (sessionName.length <= 0) {
             this.setState({errorMessage : "Enter a name"})
         }
@@ -87,7 +90,7 @@ class CreateSession extends Component<Props, State> {
             <div className="PurpleBox">
                 <p style={{color : "red"}}>{this.state.errorMessage}</p>
                 <p>Session Name :</p>
-                <input disabled={loading} ref="input" type="text"/>
+                <input disabled={loading} value={this.state.sessionName} onChange={(e) => {this.setState({ sessionName: e.currentTarget.value })}} type="text"/>
                 {loading ?
                     <p>Loading...</p>
                     :

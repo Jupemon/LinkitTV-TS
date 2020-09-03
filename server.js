@@ -13,13 +13,12 @@ const port = process.env.PORT || 3000
 
 
 
-// array of all currently active sessions
+// all currently active sessions
 let activeSessions= [];
 
 
 
 // Handle socket io connections
-
 io.on('connection', socket => { // called when frontend client connects
     console.log("connected baby")
     let index = 0;
@@ -36,7 +35,7 @@ io.on('connection', socket => { // called when frontend client connects
     })
   })
 
-
+// Append a new session to created sessions array
 app.post('/createsession', jsonParser, (req, res) => {
   const { name } = req.body;
 
@@ -60,8 +59,7 @@ app.post('/createsession', jsonParser, (req, res) => {
 })
 
 
-// Called when someone sents a video suggestion
-
+// Emit message to a specific client
 app.post('/suggestvideo', jsonParser, (req, res) => { 
 
     const {videoUrl, videoName, postId} = req.body
@@ -83,7 +81,8 @@ app.post('/suggestvideo', jsonParser, (req, res) => {
 
 })
 
-app.get('/share/:id', (req, res) => { // Serve the URL link sharing page
+ // Serve the URL link sharing page
+app.get('/share/:id', (req, res) => {
     const { id } = req.params;
     let session = activeSessions.find(o => o.name === id);
     console.log(session, "MEMEMEM")
@@ -100,6 +99,7 @@ app.get('/share/:id', (req, res) => { // Serve the URL link sharing page
 
 
 // Initialize the custom nextJS server
+
 nextApp.prepare().then(() => {
 
   app.get('*', (req, res) => {

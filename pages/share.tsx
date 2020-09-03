@@ -5,9 +5,10 @@ import TopNav from '../Components/Topnav'
 
 
 interface State {
-  loading : boolean,
-  videoUrl : string,
+  loading : boolean
+  videoUrl : string
   videoName : string
+  postId : string
 }
 
 
@@ -64,12 +65,6 @@ export default class extends Component<State>{
   }
 
 
-/*.then(d => d.json()).then(d => {
-      console.log("this was received :", d)
-      return true
-    }) */
-
-
   validateYoutubeUrl = (Url : string): boolean => { // validate Youtube URL link
 
     var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -105,7 +100,7 @@ export default class extends Component<State>{
 
       const requestData : object = { // create data which is sent to server 
         videoName,
-        videoUrl,
+        videoUrl : this.validateYoutubeUrl(videoUrl),
         postId
       }
 
@@ -142,3 +137,5 @@ export default class extends Component<State>{
     )
   }
 }
+
+

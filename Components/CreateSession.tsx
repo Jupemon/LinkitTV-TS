@@ -1,3 +1,5 @@
+// ENABLES USER TO CREATE A SESSION ON THE SERVER
+
 import { Component } from 'react';
 
 

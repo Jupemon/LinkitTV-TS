@@ -20,11 +20,6 @@ class ActiveSession extends React.Component<Props, State> {
     }
 
 
-    
-    selectVideo = (name:string) => {
-        name
-    }
-
     public render() { 
         return (
         <div>

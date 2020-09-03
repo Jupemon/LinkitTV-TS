@@ -3,36 +3,22 @@ import React from 'react';
 import VideoQueue from './VideoQueue';
 
 
-interface Props {
-    sessionName : string,
-    id : string
-}
- 
+
 interface State {
-    showPlaceHolder : boolean, // currently playing video from the list
-    firstVideoPlayed : boolean,
-    videoIndex : number,
-    videoList : object[]
+
+  playlistIndex : number // Index of the playing playlist video
+  playList : object[]  // Current youtube playlist
+
 }
 
 
 
-class YouTubeplayer extends React.Component<Props, State> {
+class YouTubeplayer extends React.Component<State> {
 
-    constructor(props : Props) {
-        super(props)
-        this.state={
-            showPlaceHolder : true,
-            firstVideoPlayed : false,
-            videoIndex : 0,
-            videoList : 
-                [
-                    { videoUrl : "p7-QZ2O-Bz0", videoName: "johnosn video 1"},
-                    { videoUrl : "p7-QZ2O-Bz0", videoName: "johnosn video 2"},
-                    { videoUrl : "p7-QZ2O-Bz0", videoName: "johnosn video 3"}
-                ]
+  state={
+            playlistIndex : 0,
+            playlist : []
         }
-    }
 
 
   componentDidMount = () => {
@@ -40,8 +26,21 @@ class YouTubeplayer extends React.Component<Props, State> {
     
   };
 
-  loadYoutubePlayer = () => { // loads the required scripts to use youtube player
+
+  loadPlaylist = (playlist: string[], index: number): void => { // Loads the provided youtube playlist
+    this.player.loadPlaylist(playlist, index);
+  }
+
+  updatePlaylist = (videoList: object[], playlistIndex: number): void => { // called by videoqueue when selecting a video, updates the youtube playlist
+    const playlist : string[] = videoList.map(i => i.videoUrl)
+    this.setState({ playlist, playlistIndex })
+    this.loadPlaylist(playlist, playlistIndex + 1)
+  }
+
+
+  loadYoutubePlayer = () => { // loads the required scripts for youtube player
     const tag = document.createElement('script');
+    console.log("loading player")
     tag.src = 'https://www.youtube.com/iframe_api';
 
     
@@ -51,13 +50,9 @@ class YouTubeplayer extends React.Component<Props, State> {
   }
 
   loadVideo = () => { // loads the video once player is ready
-    
-    const { id } = this.props;
-    const {videoIndex, videoList} = this.state
 
-    // the Player object is created uniquely based on the id in props
-    this.player = new window.YT.Player(`youtube-player-${id}`, {
-      videoId: id,
+    this.player = new window.YT.Player("youtube-player", {
+      videoId: "B1lNhNHdoPI",
       events: {
         onReady: this.onPlayerReady,
         onStateChange: this.onPlayerStateChange
@@ -78,11 +73,17 @@ class YouTubeplayer extends React.Component<Props, State> {
 
   };
 
-  onPlayerStateChange = event => { // Called every time user interacts with the player / after certain events happen with the player
+  onPlayerStateChange = event => { // Called every time user interacts with the player and automatically by youtube
   
-    if (event.data == -1 ) { // PLAYER ENDED
-      let videoIndex: number = this.state.videoIndex;
 
+    if (event.data === 0) { // VIDEO ENDED
+      const {playlist, playlistIndex} = this.state
+    }
+
+    if (event.data === -1 ) { // PLAYER ENDED
+      /*
+      let videoIndex: number = this.state.videoIndex;
+      
       var index = event.target.getPlaylistIndex();
       const playlist = this.state.videoList.map(v => {
         return v.videoUrl
@@ -91,37 +92,8 @@ class YouTubeplayer extends React.Component<Props, State> {
         event.target.loadPlaylist(playlist, videoIndex + 1);      
       }
 
-      this.setState({videoIndex : event.target.getPlaylistIndex()})
+      this.setState({videoIndex : event.target.getPlaylistIndex()})*/
     }
-    if (event.data == YT.PlayerState.ENDED) { // starts playlist over if it ends
-
-      if (event.target.getPlaylistIndex() == event.target.getPlaylist().length-1) {
-        const playlist = this.state.videoList.map(v => {
-          return v.videoUrl
-        })
-        console.log("playlist has ended")
-        this.player.loadPlaylist({playlist : playlist}, event.target.getPlaylistIndex())
-      }
-    }  
-  }
-
-  updateVideoList = (vid) => { // updates the video list
-    let videoList = this.state.videoList
-    console.log(vid, "VID TO BE ADDED")
-    console.log(this.state.videoList, "VIDEOLIST")
-    
-    if (videoList.length <= 0) { // if list is empty play the first video
-      const playlist = []
-      playlist.push(vid.videoUrl)
-      this.player.loadPlaylist({playlist: playlist})
-    }
-    videoList.push(vid)
-    if (videoList.length > 40) { // keep the max videolist lenght at this num
-      videoList = videoList.slice(1)
-    }
-    this.setState({videoList : videoList, showPlaceHolder : false})
-    
-    
   }
 
   selectVideo = v => { // called when clicking a video on video queue
@@ -137,11 +109,10 @@ class YouTubeplayer extends React.Component<Props, State> {
   }
 
   render = () => {
-    
-    const { id } = this.props;
+
     return (<div>
-        <div id={`youtube-player-${id}`} />
-        <VideoQueue videoIndex={this.state.videoIndex} selectVideo={this.selectVideo} videoList={this.state.videoList} updateVideoList={this.updateVideoList} sessionName={this.state.sessionName}/>
+        <div id={"youtube-player"}/>
+        <VideoQueue updatePlaylist={this.updatePlaylist}/>
         </div>); 
   };
 }

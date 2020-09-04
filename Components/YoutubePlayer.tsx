@@ -3,15 +3,19 @@ import React from 'react';
 import VideoQueue from './VideoQueue';
 
 
-declare global { // tell window that onYouTubeIframeAPIReady is not a fairytail, it really exists
-  interface Window { onYouTubeIframeAPIReady: any }
+declare global { // tell window that embedded Youtube player is not a fairytail, it really exists
+  interface Window { onYouTubeIframeAPIReady: any, YT : any }
 }
 
-interface State {
+interface State { // Both values are passed to player
 
   playlistIndex : number // Currently playing video
   playlist : string[] // Current youtube playlist
 
+}
+
+interface player {
+  player : any
 }
 
 interface Props { 
@@ -19,25 +23,16 @@ interface Props {
 }
 
 
-class YouTubeplayer extends React.Component<Props, State> {
+class YouTubeplayer extends React.Component<Props, State, player> {
 
   constructor(props : Props) {
     super(props)
-
     this.state = {
       playlistIndex : 0,
       playlist : []
     }
   
   }
-
-
-
-
-  componentDidMount = () => {
-    this.loadPlayerScripts()
-    
-  };
 
 
   loadPlaylist = (playlist: string[], index: number): void => { // Loads the provided youtube playlist
@@ -52,7 +47,14 @@ class YouTubeplayer extends React.Component<Props, State> {
   }
 
 
-  loadPlayerScripts = (): void => { // loads the required scripts for youtube player
+  componentDidMount = () => {
+    this.loadPlayerScripts()
+    
+  };
+
+
+
+  loadPlayerScripts = (): void => { // loads the required scripts for player
     const tag = document.createElement('script')
     tag.src = 'https://www.youtube.com/iframe_api'
     const firstScriptTag = document.getElementsByTagName('script')[0]

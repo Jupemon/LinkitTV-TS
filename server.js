@@ -1,4 +1,4 @@
-// Handle Setup
+// Imports
 
 const app = require('express')();
 const server = require('http').Server(app)
@@ -20,7 +20,6 @@ let activeSessions= [];
 
 // Handle socket io connections
 io.on('connection', socket => { // called when frontend client connects
-    console.log("connected baby")
     let index = 0;
     console.log(activeSessions, "LIST OF ALL ACTIVE SESSIONS")
     activeSessions[index].socketId = socket.id; // 
@@ -39,15 +38,14 @@ io.on('connection', socket => { // called when frontend client connects
 app.post('/createsession', jsonParser, (req, res) => {
   const { name } = req.body;
 
-  let session = activeSessions.find(o => o.name.toLowerCase() === name.toLowerCase()); // searches for an active session with that name
+  let session = activeSessions.find(o => o.name.toLowerCase() === name.toLowerCase()); // Make sure that name is not already taken
  
-  if (session === undefined || session === null) { // creates a new session
+  if (session === undefined || session === null) { 
     //createSocket(req.params.name);
     activeSessions.push({
       name : name.toLowerCase(),
       suggestedvideos : []
     })
-    console.log(activeSessions, "list of active sessions")
     res.status(201).json(`${name} created`)
   }
   
@@ -85,7 +83,7 @@ app.post('/suggestvideo', jsonParser, (req, res) => {
 app.get('/share/:id', (req, res) => {
     const { id } = req.params;
     let session = activeSessions.find(o => o.name === id);
-    console.log(session, "MEMEMEM")
+
     if (session === undefined || id === null){ // If session doesnt exist serve the notfound page
       return nextApp.render(req, res, '/notfound', { id: id })
     }

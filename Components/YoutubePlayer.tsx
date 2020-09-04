@@ -31,9 +31,9 @@ class YouTubeplayer extends React.Component<Props, State, player> {
       playlistIndex : 0,
       playlist : []
     }
-  
+    
   }
-
+  
 
   loadPlaylist = (playlist: string[], index: number): void => { // Loads the provided youtube playlist
     this.player.loadPlaylist(playlist, index);
@@ -63,6 +63,9 @@ class YouTubeplayer extends React.Component<Props, State, player> {
     window.onYouTubeIframeAPIReady = this.loadVideo // Call this after player has been loaded
   }
 
+
+  player: any // declared for Player
+
   loadVideo = (): void => { // loads the video once player is ready
     this.player = new window.YT.Player("youtube-player", {
       videoId: "o_XaJdDqQA0",
@@ -73,7 +76,7 @@ class YouTubeplayer extends React.Component<Props, State, player> {
     });
     //this.setState({videoIndex : this.state.videoIndex ++})
   };
-
+  
 
   onPlayerReady = event => {
 

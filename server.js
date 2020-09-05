@@ -97,13 +97,13 @@ nextApp.prepare().then(() => {
 
   })
 
-  
+
   app.get('*', (req, res) => {
     return nextHandler(req, res);
   })
 
 
-  server.listen(port, err => {
+  server.listen(process.env.POR || 3000, err => {
     if (err) throw err
     console.log(`> Ready on http://localhost:${port}`)
   })

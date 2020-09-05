@@ -2,7 +2,7 @@
   "name": "linkitv-ts",
   "version": "0.1.0",
   "private": true,
-  "main": "index.tsx",
+  "main": "index",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/socket.io-client": "^1.4.33",
+    "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "next": "9.5.2",
     "react": "16.13.1",

@@ -1,14 +1,12 @@
-// ENABLES USER TO CREATE A SESSION ON THE SERVER
-
 import { Component } from 'react';
 
 
 interface Props {
-    sessionCreated : (sessionName : string) => void
+    sessionCreated : (sessionName : string) => void // 
 }
 
 interface State {
-    errorMessage : string,
+    errorMessage : string, // shown to user in case of failure
     loading : boolean,
     sessionName : string // User input
 

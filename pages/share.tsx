@@ -1,31 +1,33 @@
-import { useRouter } from 'next/router'
 import React, { Component, Props } from 'react'
 import TopNav from '../Components/Topnav'
-
 
 
 interface State {
   loading : boolean
   videoUrl : string
   videoName : string
-  postId : string
+  infoMessage : string
+  id : string
 }
-
-
 
 export default class extends Component<State>{
   
-  // get props passed by custom nextJS server
-  static async getInitialProps ({ query: { id } }) {
-    return { postId: id }
+
+  // Get props from custom next server
+  static getInitialProps (context : any) {
+    let query  = context.query;
+    return query
   }
 
-  state = {
-    infoMessage : "",
-    loading : false,
-    videoUrl : "",
-    videoName : ""
-  }
+
+    state = {
+      infoMessage : "",
+      loading : false,
+      videoUrl : "",
+      videoName : ""
+    }
+
+
 
 
   clearInput = () : void =>  { // Clears the user input
@@ -65,7 +67,7 @@ export default class extends Component<State>{
   }
 
 
-  validateYoutubeUrl = (Url : string): boolean => { // validate Youtube URL link
+  validateYoutubeUrl = (Url : string): boolean | string => { // validate Youtube URL link & return the video ID
 
     var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     let match: any = Url.match(regExp);
@@ -94,19 +96,21 @@ export default class extends Component<State>{
   }
 
   handleClick = () => { // Called after user clicks share video button
+
     const { videoUrl, videoName } = this.state
-    const { postId } = this.props
+    const { id } = this.props
+
     if (this.validateInput(videoUrl, videoName)) {
 
       const requestData : object = { // create data which is sent to server 
         videoName,
         videoUrl : this.validateYoutubeUrl(videoUrl),
-        postId
+        id
       }
 
       this.sendRequest(requestData) // send data
-      .then(d => {this.showMessage(d)})
-      .catch(e => {this.showMessage(e)}) 
+      .then((d : any) => {this.showMessage(d)})
+      .catch((e) => {this.showMessage(e)}) 
     }
     
     else {
@@ -115,12 +119,13 @@ export default class extends Component<State>{
   }
 
   render() {
+    console.log(this.props.id, "PROPS")
     return (
       <div>
         <TopNav />
 
         <div className="PurpleBox">
-          <h1>Share videos with {this.props.postId}</h1>
+          <h1>Share videos with {this.props.id}</h1>
         </div>
 
         <div className="PurpleBox">

@@ -13,7 +13,7 @@ class Session extends Component { // Shows create session page if one has not be
     sessionName : ""
   }
 
-  sessionCreated = (name) => { // Called once session has been created, Renders activeSession 
+  sessionCreated = (name: string) => { // Called once session has been created, Renders activeSession 
     this.setState({sessionCreated : true, sessionName : name})
   }
 

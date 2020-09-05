@@ -1,29 +1,25 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import VideoQueue from './VideoQueue';
+import React from 'react'
+import VideoQueue, { Video } from './VideoQueue'
 
 
 declare global { // tell window that embedded Youtube player is not a fairytail, it really exists
   interface Window { onYouTubeIframeAPIReady: any, YT : any }
 }
 
-interface State { // Both values are passed to player
+interface State { // Both values are passed to embedded player
 
   playlistIndex : number // Currently playing video
   playlist : string[] // Current youtube playlist
 
 }
 
-interface player {
-  player : any
-}
-
 interface Props { 
-  sessionName : string // used to receive socketIO messages
+  sessionName : string // used as an identifier to receive socketIO messages
 }
 
 
-class YouTubeplayer extends React.Component<Props, State, player> {
+class YouTubeplayer extends React.Component<Props, State> {
 
   constructor(props : Props) {
     super(props)
@@ -39,9 +35,10 @@ class YouTubeplayer extends React.Component<Props, State, player> {
     this.player.loadPlaylist(playlist, index);
   }
 
-  updatePlaylist = (videoList, playlistIndex: number): void => { // called by videoqueue when clicking a video, updates the youtube playlist
-    const playlist : string[] = videoList.map(i => i.videoUrl)
-    console.log(playlist, "PLQ")
+  updatePlaylist = (videoList: Array<Video>, playlistIndex: number): void => { // called by videoqueue when clicking a video, updates the youtube playlist
+
+    const playlist : string[] = videoList.map(i => i.videoUrl) // Convert into youtube playlist
+
     this.setState({ playlist, playlistIndex })
     this.loadPlaylist(playlist, playlistIndex)
   }
@@ -57,39 +54,25 @@ class YouTubeplayer extends React.Component<Props, State, player> {
   loadPlayerScripts = (): void => { // loads the required scripts for player
     const tag = document.createElement('script')
     tag.src = 'https://www.youtube.com/iframe_api'
-    const firstScriptTag = document.getElementsByTagName('script')[0]
+    const firstScriptTag : any = document.getElementsByTagName('script')[0]
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
     
     window.onYouTubeIframeAPIReady = this.loadVideo // Call this after player has been loaded
   }
 
 
-  player: any // declared for Player
+  player: any // declared for TS
 
   loadVideo = (): void => { // loads the video once player is ready
     this.player = new window.YT.Player("youtube-player", {
       videoId: "o_XaJdDqQA0",
       events: {
-        onReady: this.onPlayerReady,
         onStateChange: this.onPlayerStateChange
       },
     });
-    //this.setState({videoIndex : this.state.videoIndex ++})
   };
   
-
-  onPlayerReady = event => {
-
-    // Position the video player
-    document.querySelector("iframe").style.position = "absolute";
-    document.querySelector("iframe").style.height = "90%"
-    document.querySelector("iframe").style.width = "90%"
-    document.querySelector("iframe").style.bottom = "0"
-    document.querySelector("iframe").style.right = "0"
-
-  };
-
-  onPlayerStateChange = event => { //  Events called by Youtube
+  onPlayerStateChange = (event: any): void => { //  Events called by Youtube
   
     // For future features
     if (event.data === -1) { // Called every time user interacts with the player

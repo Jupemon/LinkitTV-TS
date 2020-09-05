@@ -64,6 +64,18 @@ a {
   color: grey;
 }
 
+
+/* VideoPlayer */
+
+iframe {
+  position : absolute;
+  height: 90%;
+  width: 90%;
+  bottom: 0px;
+  right: 0px;
+}
+
+
 /* VideoQueue */
 
 .VideoQueue { 
@@ -94,7 +106,7 @@ a {
   background-color: grey;
 }
 
-
+/* SessionInfo */
 
 .SessionInfo {
   top: 10px;

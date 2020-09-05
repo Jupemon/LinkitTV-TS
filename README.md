@@ -5,6 +5,6 @@ I am rewriting the [LinkitTV](https://github.com/Jupemon/LinkitTV) project i hav
 
 ## Links
 
-- [View project](https://github.com/Jupemon/LinkitTV)
+- [View project](https://linkit-tv-ts.herokuapp.com/)
 
 - Hosted on heroku with free tier, initial loading might be slow

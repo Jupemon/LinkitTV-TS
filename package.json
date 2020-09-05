@@ -2,11 +2,11 @@
   "name": "linkitv-ts",
   "version": "0.1.0",
   "private": true,
-  "main": "index",
+  "main": "index.tsx",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "cross-env NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@types/socket.io-client": "^1.4.33",

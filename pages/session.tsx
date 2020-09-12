@@ -7,7 +7,7 @@ import TopNav from '../Components/Topnav'
 
 
 
-class Session extends Component { // Shows create session page if one has not been created
+class Session extends Component {
   state={
     sessionCreated : false,
     sessionName : ""
@@ -19,7 +19,7 @@ class Session extends Component { // Shows create session page if one has not be
 
   render() {
     return (<div>
-
+      
       <TopNav /> 
       {this.state.sessionCreated ? <ActiveSession sessionName={this.state.sessionName}/> : <CreateSession sessionCreated={this.sessionCreated}/>}
         

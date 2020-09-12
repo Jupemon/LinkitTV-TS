@@ -36,13 +36,10 @@ class VideoQueue extends Component<Props, State> {
     }
 
 
-    componentDidMount() { 
-
+    componentDidMount() {
 
         this.state.socket.on(`${this.props.sessionName} video`, (msg : Message) => { // called every time socket io receives a message 
-            console.log("data received")
-            this.updateVideoList(msg)
-        
+            this.updateVideoList(msg)        
         })
     }
 

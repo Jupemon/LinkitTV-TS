@@ -119,7 +119,6 @@ export default class extends Component<State>{
   }
 
   render() {
-    console.log(this.props.id, "PROPS")
     return (
       <div>
         <TopNav />

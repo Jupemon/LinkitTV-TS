@@ -1,6 +1,5 @@
 
 
-// Imports
 const app = require('express')();
 const server = require('http').Server(app)
 const io = require('socket.io')(server);
@@ -19,10 +18,9 @@ let activeSessions= [];
 
 // Handle socket io messages
 io.on('connection', socket => { // called when frontend client connects
+  
     let index = 0;
-    console.log("connected")
-    console.log(activeSessions, "LIST OF ALL ACTIVE SESSIONS")
-    activeSessions[index].socketId = socket.id; // 
+    activeSessions[index].socketId = socket.id; 
     index++;
   
     socket.on('disconnect', () => { // delete session on disconnect

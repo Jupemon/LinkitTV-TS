@@ -1,6 +1,4 @@
-## Explanation
-
-I remade [LinkitTV](https://github.com/Jupemon/LinkitTV) project i have previously made. But this time with Typescript and prettier code.
+This is a remake of [LinkitTV](https://github.com/Jupemon/LinkitTV) project i have previously made.
 
 # Linkit TV
 
@@ -10,17 +8,7 @@ The rise of [Reaction Content](https://en.wikipedia.org/wiki/Reaction_video) gav
 
 ## How it works
 
-1. Open the LinkitTV site and start a new session. 
-
-2. It Loads up an embedded youtube player.
-
-3. After loading the player it generates an URL with an unique query string which you can share online.
-
-4. People can you send youtube video links via the URL.
-
-5. The embedded player starts playing the linked youtube videos.
-
-6. Any additional linked videos are added to a queue and autoplayed.
+I made a [Youtube video](https://www.youtube.com/watch?v=v72WnalJ8ss&ab_channel=Jupemon) explaining how it works
 
 
 ## Tools / dependencies used

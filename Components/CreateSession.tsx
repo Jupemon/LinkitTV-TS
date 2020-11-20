@@ -88,7 +88,7 @@ class CreateSession extends Component<Props, State> {
             <div className="PurpleBox">
                 <p style={{color : "red"}}>{this.state.errorMessage}</p>
                 <p>Session Name :</p>
-                <input disabled={loading} value={this.state.sessionName} onChange={(e) => {this.setState({ sessionName: e.currentTarget.value })}} type="text"/>
+                <input disabled={loading} value={this.state.sessionName} onChange={(e) => {this.setState({ sessionName: e.currentTarget.value.toLowerCase() })}} type="text"/>
                 {loading ?
                     <p>Loading...</p>
                     :

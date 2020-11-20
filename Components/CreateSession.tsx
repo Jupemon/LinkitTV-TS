@@ -38,7 +38,7 @@ class CreateSession extends Component<Props, State> {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name : sessionName,
+                name : sessionName.toLowerCase(),
             })
         }).then(d => {
             this.setState({loading : false})
